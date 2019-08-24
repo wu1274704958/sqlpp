@@ -1,7 +1,6 @@
 #pragma once
 #include "Connect.h"
-#include <iostream>
-#include <typeinfo>
+#include <comm.hpp>
 
 #define DEF_KEY_WORD_VAL_SAME(C) struct C { constexpr static const char * _val = #C; }
 #define DEF_KEY_WORD_VAL(C,V) struct C { constexpr static const char * _val = #V; };
@@ -39,6 +38,12 @@ namespace sql {
 		DEF_KEY_WORD_VAL(And,and);
 	};
 
+	template <class T>											
+	using has_key_word_val_t = decltype(T::_val);				
+																
+	template <typename T>										
+	using has_key_word_val_vt = wws::is_detected<has_key_word_val_t,T>;
+
 	class Query
 	{
 	public:
@@ -49,6 +54,7 @@ namespace sql {
 		template<typename KW>
 		constexpr static const char* get_key_word()
 		{
+			static_assert(has_key_word_val_vt<KW>::value,"This type not KeyWord type!!!");
 			return KW::_val;
 		}
 		template<typename KW,bool append_space = true, bool append_qm = false,char Token = ' ', char Token2 = ' '>
@@ -106,7 +112,6 @@ namespace sql {
 			data += ' ';			
 			return *this;
 		}
-		
 
 		decltype(auto) exec(Connect& c)
 		{
