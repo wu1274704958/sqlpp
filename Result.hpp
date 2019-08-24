@@ -23,7 +23,7 @@ namespace sql {
 			return m_row != nullptr;
 		}
 		template<size_t I,typename TUP,typename F,typename ... Args>
-		void get_sub(TUP& tup)
+		void get_tup_sub(TUP& tup)
 		{
 			if constexpr (std::is_same_v<std::string, std::remove_cv_t<F>>)
 			{
@@ -41,16 +41,16 @@ namespace sql {
 			}
 			if constexpr (sizeof...(Args) > 0)
 			{
-				get_sub<I + 1,TUP, Args...>(tup);
+				get_tup_sub<I + 1,TUP, Args...>(tup);
 			}
 		}
 		template<typename ...TS>
-		std::tuple<TS...> get()
+		std::tuple<TS...> get_tup()
 		{
 			assert(sizeof...(TS) <= len);
 			std::tuple<TS...> tup;
 
-			get_sub<0,std::remove_cv_t<decltype(tup)>,TS...>(tup);
+			get_tup_sub<0,std::remove_cv_t<decltype(tup)>,TS...>(tup);
 			return tup;
 		}
 

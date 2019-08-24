@@ -7,3 +7,4 @@
 #include "Connect.h"
 #include "exception.h"
 #include "Result.hpp"
+#include "Query.hpp"
