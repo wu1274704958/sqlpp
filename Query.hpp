@@ -36,6 +36,8 @@ namespace sql {
 		DEF_KEY_WORD_VAL_SAME(between);
 		DEF_KEY_WORD_VAL_SAME(like);
 		DEF_KEY_WORD_VAL(And,and);
+		DEF_KEY_WORD_VAL_SAME(update);
+		DEF_KEY_WORD_VAL_SAME(set);
 	};
 
 	template <class T>											
