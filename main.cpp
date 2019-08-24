@@ -83,8 +83,7 @@ int main()
 		Query q;
 
 		auto my_result = q.a<K::select>().a<K::star>().a<K::from>(user::get_class_name())
-			.a<K::Where>(user::get_field_name(&user::uid))
-			.a<K::neq>("10005")
+			.where<false,K::neq>(&user::uid,"10005")
 			.exec(conn);
 		if (my_result)
 		{
@@ -99,13 +98,20 @@ int main()
 			}
 		}
 		q.clear();
-		q.select({ user::get_field_name(&user::acc),user::get_field_name(&user::psd) })
+		/*q.select({ user::get_field_name(&user::acc),user::get_field_name(&user::psd) })
 			.a<K::from>(user::get_class_name())
 			.a<K::Where>(user::get_field_name(&user::uid))
 			.a<K::neq>("10005")
 			.a<K::And>(user::get_field_name(&user::name))
 			.a<K::neq,true,true>("1");
-			my_result = q.exec(conn);
+			my_result = q.exec(conn);*/
+
+		q.select(&user::acc,&user::psd,&user::age)
+			.a<K::Where>(user::get_field_name(&user::uid))
+			.a<K::neq>("10005")
+			.a<K::And>(user::get_field_name(&user::name))
+			.a<K::neq, true, true>("1");
+		my_result = q.exec(conn);
 
 		if (my_result)
 		{
@@ -115,8 +121,8 @@ int main()
 				//auto [id,name,acc,psd,age, sex, head] = row.get<int,std::string,std::string,std::string,int,std::string,std::string>();
 				//std::cout << id << ' ' << name << ' ' << sex << ' ' << age << ' ' << acc << ' ' << psd << ' ' << head << '\n';
 
-				auto [acc,psd] = row.get_tup<std::string,std::string>();
-				std::cout << acc << ' ' << psd << '\n';
+				auto [acc,psd,age] = row.get_tup<std::string,std::string,int>();
+				std::cout << acc << ' ' << psd << ' '<< age <<  '\n';
 			}
 		}
 	}

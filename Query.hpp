@@ -115,6 +115,37 @@ namespace sql {
 			return *this;
 		}
 
+
+		template<typename CLS, typename Fir,typename ...FS>
+		void select_sub(Fir CLS::*fir, FS CLS::* ...fs) {
+			
+			data += CLS::get_field_name(fir);
+			if constexpr (sizeof...(FS) > 0)
+			{
+				data += ',';
+				select_sub(fs...);
+			}
+		}
+
+		template<typename CLS,typename ...FS>
+		Query& select(FS CLS::* ...fs) {
+			this->a<K::select>();
+			select_sub(fs...);
+			data += ' ';
+			this->a<K::from>(CLS::get_class_name());
+			return *this;
+		}
+
+		template<bool append_qm,typename KW,typename CLS, typename F>
+		Query& where(F CLS::* f,std::string&& val)
+		{
+			this->a<K::Where>();
+			this->a(CLS::get_field_name(f));
+			this->a<KW>();
+			this->a<true, ' ', append_qm>(std::move(val));
+			return *this;
+		}
+
 		decltype(auto) exec(Connect& c)
 		{
 			return c.query(data);
