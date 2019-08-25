@@ -25,16 +25,19 @@ if(MYSQL_FOUND AND MINI_TEST_FOUND )
 	target_include_directories(${LIB_NAME} PRIVATE ${MYSQL_INCLUDE_DIR} ${MINI_TEST_INCLUDE_DIR} )
 	target_link_libraries(${LIB_NAME} ${MYSQL_LIBRARYS})
 
-	add_executable(${PROJECT_NAME} main.cpp)
-	add_dependencies(${PROJECT_NAME} ${LIB_NAME})
+	message("msg ${CMAKE_SOURCE_DIR}/build/x64-${CMAKE_BUILD_TYPE}")
 
 	find_library(SQL_PP_LIB sqlpp "${CMAKE_SOURCE_DIR}/build/x64-${CMAKE_BUILD_TYPE}")
 
-	message(msg ${SQL_PP_LIB})
+	message("msg ${SQL_PP_LIB}")
 
-	message(msg  ${MYSQL_INCLUDE_DIR}   ${MYSQL_LIBRARYS})
+	message("msg  ${MYSQL_INCLUDE_DIR}   ${MYSQL_LIBRARYS}")
+	if(SQL_PP_LIB)
+		add_executable(${PROJECT_NAME} main.cpp)
+		add_dependencies(${PROJECT_NAME} ${LIB_NAME})
 
-	target_include_directories(${PROJECT_NAME} PRIVATE ${MYSQL_INCLUDE_DIR} ${MINI_TEST_INCLUDE_DIR} )
-	target_link_libraries(${PROJECT_NAME} ${MYSQL_LIBRARYS} ${SQL_PP_LIB})
+		target_include_directories(${PROJECT_NAME} PRIVATE ${MYSQL_INCLUDE_DIR} ${MINI_TEST_INCLUDE_DIR} )
+		target_link_libraries(${PROJECT_NAME} ${MYSQL_LIBRARYS} ${SQL_PP_LIB})
+	endif()
 
 endif()

@@ -19,8 +19,7 @@ namespace sql {
 		{
 			return query(str.data());
 		}
-
-		
+		unsigned long long affected_rows();
 
 		template<typename ...Args>
 		Result insert(const char *tab_n, Args&& ...args)

@@ -38,6 +38,7 @@ namespace sql {
 		DEF_KEY_WORD_VAL(And,and);
 		DEF_KEY_WORD_VAL_SAME(update);
 		DEF_KEY_WORD_VAL_SAME(set);
+		DEF_KEY_WORD_VAL(Delete,delete);
 	};
 
 	template <class T>											

@@ -14,6 +14,11 @@ namespace sql {
 		return Result(::mysql_store_result(dri.pmysql));
 	}
 
+	unsigned long long Connect::affected_rows()
+	{
+		return ::mysql_affected_rows(dri.pmysql);
+	}
+
 	Connect::Connect(
 		Drive& d,
 		const char *host,

@@ -89,6 +89,13 @@ int main()
 				std::cout << acc << ' ' << psd << ' '<< age <<  '\n';
 			}
 		}
+
+		q.clear();
+		my_result = q.asc<user, K::Delete, K::from>()
+			.where<K::eq,false>(&user::uid, "10007")
+			.exec(conn);
+
+		cout << "affected " << conn.affected_rows() << endl;
 	}
 	catch (std::exception e)
 	{
