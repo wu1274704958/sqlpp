@@ -4,43 +4,7 @@
 #include <string.h>
 #include "macro.h"
 
-
 using namespace std;
-
-extern "C"  {
-	void fff(const char *p, ...);
-}
-void fff(const char *p, ...) {
-	int len = strlen(p);
-	va_list args;
-	va_start(args, p);
-	for (int i = 0; i < len; ++i)
-	{
-		switch (p[i])
-		{
-		case 'a':
-		{
-			int a = va_arg(args, int);
-			printf("int %d\n", a);
-		}
-		break;
-		case 'b':
-		{
-			char a = va_arg(args, char);
-			printf("char %c\n", a);
-		}
-		break;
-		case 'c':
-		{
-			long long a = va_arg(args, long long);
-			printf("long long %ld\n", a);
-		}
-		break;
-		}
-	}
-	va_end(args);
-}
-
 using namespace sql;
 
 struct user {
@@ -78,12 +42,13 @@ int main()
 		
 		Drive dri;
 
-		Connect conn = dri.connect("localhost", "root", "As147258369", "test", 3306);
+		Connect conn = dri.connect("localhost", "root", "As147258369", "cs", 3306);
 		
 		Query q;
 
-		auto my_result = q.a<K::select>().a<K::star>().a<K::from>(user::get_class_name())
-			.where<false,K::neq>(&user::uid,"10005")
+		auto my_result = q.as<K::select,K::star,K::from>()
+			.ac<user>()
+			.where<K::neq, false>(&user::uid,"10005")
 			.exec(conn);
 		if (my_result)
 		{
@@ -107,9 +72,8 @@ int main()
 			my_result = q.exec(conn);*/
 
 		q.select(&user::acc,&user::psd,&user::age)
-			.a<K::Where>(user::get_field_name(&user::uid))
-			.a<K::neq>("10005")
-			.a<K::And>(user::get_field_name(&user::name))
+			.where<K::neq, false>(&user::uid,"10005")
+			.a<K::And>(&user::name)
 			.a<K::neq, true, true>("1");
 		my_result = q.exec(conn);
 

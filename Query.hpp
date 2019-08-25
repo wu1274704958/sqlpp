@@ -16,7 +16,7 @@ namespace sql {
 		DEF_KEY_WORD_VAL_SAME(create);
 		DEF_KEY_WORD_VAL_SAME(table);
 		DEF_KEY_WORD_VAL(primary_key,primary key);
-		DEF_KEY_WORD_VAL(auto_increment, auto increment);
+		DEF_KEY_WORD_VAL_SAME(auto_increment);
 		DEF_KEY_WORD_VAL(not_null,not null);
 		DEF_KEY_WORD_VAL(semicolon,;);
 		DEF_KEY_WORD_VAL_S(l_bar,"(");
@@ -102,6 +102,40 @@ namespace sql {
 			return *this;
 		}
 
+		template<typename ...KW>
+		Query& as()
+		{
+			(a<KW>(), ...);
+			return *this;
+		}
+
+		template<typename KW,typename CLS,typename F>
+		Query& a(F CLS::* f)
+		{
+			return a<KW>().
+				a(CLS::get_field_name(f));
+		}
+
+		template<typename CLS, typename F>
+		Query& a(F CLS::* f)
+		{
+			return a(CLS::get_field_name(f));
+		}
+
+		template<typename CLS, typename ...KW>
+		Query& asc()
+		{
+			(a<KW>(), ...);
+			a(CLS::get_class_name());
+			return *this;
+		}
+
+		template<typename CLS>
+		Query& ac()
+		{
+			return a(CLS::get_class_name());
+		}
+
 		Query& select(std::initializer_list<const char *> fields) {
 			this->a<K::select>();
 			for (auto it = fields.begin(); it != fields.end(); )
@@ -136,7 +170,7 @@ namespace sql {
 			return *this;
 		}
 
-		template<bool append_qm,typename KW,typename CLS, typename F>
+		template<typename KW, bool append_qm,typename CLS, typename F>
 		Query& where(F CLS::* f,std::string&& val)
 		{
 			this->a<K::Where>();
