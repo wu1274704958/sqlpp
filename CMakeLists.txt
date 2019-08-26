@@ -32,11 +32,14 @@ if(MYSQL_FOUND AND MINI_TEST_FOUND )
 	message("msg ${SQL_PP_LIB}")
 
 	message("msg  ${MYSQL_INCLUDE_DIR}   ${MYSQL_LIBRARYS}")
-	if(SQL_PP_LIB)
-		add_executable(${PROJECT_NAME} main.cpp)
-		add_dependencies(${PROJECT_NAME} ${LIB_NAME})
 
-		target_include_directories(${PROJECT_NAME} PRIVATE ${MYSQL_INCLUDE_DIR} ${MINI_TEST_INCLUDE_DIR} )
+	add_executable(${PROJECT_NAME} main.cpp)
+	target_include_directories(${PROJECT_NAME} PRIVATE ${MYSQL_INCLUDE_DIR} ${MINI_TEST_INCLUDE_DIR} )
+
+
+	if(SQL_PP_LIB)
+		
+		add_dependencies(${PROJECT_NAME} ${LIB_NAME})
 		target_link_libraries(${PROJECT_NAME} ${MYSQL_LIBRARYS} ${SQL_PP_LIB})
 	endif()
 

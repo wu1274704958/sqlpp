@@ -39,6 +39,8 @@ namespace sql {
 		DEF_KEY_WORD_VAL_SAME(update);
 		DEF_KEY_WORD_VAL_SAME(set);
 		DEF_KEY_WORD_VAL(Delete,delete);
+		DEF_KEY_WORD_VAL_SAME(into);
+		DEF_KEY_WORD_VAL_SAME(insert);
 	};
 
 	template <class T>											
@@ -177,8 +179,19 @@ namespace sql {
 			this->a<K::Where>();
 			this->a(CLS::get_field_name(f));
 			this->a<KW>();
-			this->a<true, ' ', append_qm>(std::move(val));
-			return *this;
+			return this->a<true, ' ', append_qm>(std::move(val));
+		}
+
+		template<typename CLS,typename ... FS>
+		Query& insert(CLS& cls,FS CLS::* ...fs)
+		{
+			asc<CLS, K::insert, K::into>();
+			a<K::l_bar>();
+			insert_k_sub(fs...);
+			a<K::r_bar>();
+			as<K::values,K::l_bar>();
+			insert_v_sub(cls, fs...);
+			return a<K::r_bar>();
 		}
 
 		decltype(auto) exec(Connect& c)
@@ -190,8 +203,50 @@ namespace sql {
 		{
 			data.clear();
 		}
-		
+	private: 
+		template<typename CLS,typename F, typename ... FS>
+		void insert_k_sub(F CLS::* f,FS CLS::* ...fs)
+		{
+			if constexpr (sizeof...(FS) > 0)
+			{
+				a<true, ','>(CLS::get_field_name(f));
+				insert_k_sub(fs...);
+			}
+			else {
+				a<false>(CLS::get_field_name(f));
+			}
+		}
 
+		template<typename CLS, typename F, typename ... FS>
+		void insert_v_sub(CLS& cls,F CLS::* f, FS CLS::* ...fs)
+		{
+			constexpr bool is_list = wws::is_std_list<std::remove_cv_t<F>>::val;
+			constexpr bool append_qm = std::is_same_v<std::string, std::remove_cv_t<F>> || is_list;
+			constexpr bool is_str = std::is_same_v<std::string, std::remove_cv_t<F>>;
+			if constexpr (sizeof...(FS) > 0)
+			{
+				if constexpr (is_str)
+				{
+					std::string temp = cls.*f;
+					a<true, ',', append_qm>(std::move(temp));
+				}else
+				{ 
+					a<true, ',', append_qm>(wws::to_string(cls.*f));
+				}
+				insert_v_sub(cls,fs...);
+			}
+			else {
+				if constexpr (is_str)
+				{
+					std::string temp = cls.*f;
+					a<false, ' ', append_qm>(std::move(temp));
+				}
+				else
+				{
+					a<false, ' ', append_qm>(wws::to_string(cls.*f));
+				}
+			}
+		}
 	private:
 		std::string data;
 	};

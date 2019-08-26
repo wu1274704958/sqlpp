@@ -42,9 +42,15 @@ int main()
 		
 		Drive dri;
 
-		Connect conn = dri.connect("localhost", "root", "As147258369", "cs", 3306);
-		
+		//Connect conn = dri.connect("localhost", "root", "As147258369", "cs", 3306);
+		Connect conn = dri.connect("localhost", "root", "As147258369", "test", 3306);
 		Query q;
+		user u{0,"zff","B",23,"zff","123456",""};
+		q.insert(u, &user::uid, &user::acc, &user::psd, &user::age, &user::sex, &user::head, &user::name)
+		.exec(conn);
+		q.clear();
+
+		cout << conn.affected_rows() << endl;
 
 		auto my_result = q.as<K::select,K::star,K::from>()
 			.ac<user>()
