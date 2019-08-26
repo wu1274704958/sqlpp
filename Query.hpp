@@ -41,6 +41,7 @@ namespace sql {
 		DEF_KEY_WORD_VAL(Delete,delete);
 		DEF_KEY_WORD_VAL_SAME(into);
 		DEF_KEY_WORD_VAL_SAME(insert);
+		DEF_KEY_WORD_VAL(Or,or);
 	};
 
 	template <class T>											
@@ -192,6 +193,12 @@ namespace sql {
 			as<K::values,K::l_bar>();
 			insert_v_sub(cls, fs...);
 			return a<K::r_bar>();
+		}
+
+		template <typename CLS>
+		Query& del()
+		{
+			return asc<CLS, K::Delete, K::from>();
 		}
 
 		decltype(auto) exec(Connect& c)

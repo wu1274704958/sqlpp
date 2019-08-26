@@ -52,6 +52,11 @@ int main()
 
 		cout << conn.affected_rows() << endl;
 
+		q.del<user>()
+			.where<K::eq, false>(&user::uid, "10019")
+			.a<K::Or>(&user::uid).a<K::eq>("10020").exec(conn);
+		q.clear();
+
 		auto my_result = q.as<K::select,K::star,K::from>()
 			.ac<user>()
 			.where<K::neq, false>(&user::uid,"10005")
