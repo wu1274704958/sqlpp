@@ -11,7 +11,7 @@ message( "finding ${MOD_NAME}!"  )
         find_path( MYSQL_INCLUDE_DIR mysql.h "${MYSQL_PATH}/include" )
 		find_library( MYSQL_LIBRARY1 "libmysql.lib" "${MYSQL_PATH}/lib" )
 
-		set(MYSQL_LIBRARYS ${MYSQL_LIBRARY1} ${MYSQL_LIBRARY2} ${MYSQL_LIBRARY3})
+		set(MYSQL_LIBRARYS ${MYSQL_LIBRARY1})
 
         if( MYSQL_INCLUDE_DIR AND MYSQL_LIBRARYS)
 
