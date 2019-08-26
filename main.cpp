@@ -1,8 +1,8 @@
-#include "mysql.hpp"
+#include "sqlpp/mysql.hpp"
 #include <iostream>
 #include<stdio.h>
 #include <string.h>
-#include "macro.h"
+#include "sqlpp/macro.h"
 
 using namespace std;
 using namespace sql;

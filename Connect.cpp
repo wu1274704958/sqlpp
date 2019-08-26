@@ -1,7 +1,7 @@
-#include "Connect.h"
-#include "Drive.h"
-#include "exception.h"
-#include "Result.hpp"
+#include "sqlpp/Connect.h"
+#include "sqlpp/Drive.h"
+#include "sqlpp/exception.h"
+#include "sqlpp/Result.hpp"
 
 namespace sql {
 	Result Connect::query(const char *str)

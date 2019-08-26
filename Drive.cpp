@@ -1,6 +1,6 @@
-#include "Drive.h"
-#include "exception.h"
-#include "Connect.h"
+#include "sqlpp/Drive.h"
+#include "sqlpp/exception.h"
+#include "sqlpp/Connect.h"
 
 namespace sql {
 
