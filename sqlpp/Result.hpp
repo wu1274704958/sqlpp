@@ -116,6 +116,11 @@ namespace sql {
 			return m_res != nullptr;
 		}
 		
+		unsigned long long rows()
+		{
+			return ::mysql_num_rows(m_res);
+		}
+
 		Row next()
 		{
 			return Row(::mysql_fetch_row(m_res),::mysql_num_fields(m_res));
