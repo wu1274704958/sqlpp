@@ -210,6 +210,11 @@ namespace sql {
 		{
 			data.clear();
 		}
+
+		std::string& str()
+		{
+			return data;
+		}
 	private: 
 		template<typename CLS,typename F, typename ... FS>
 		void insert_k_sub(F CLS::* f,FS CLS::* ...fs)
