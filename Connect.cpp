@@ -19,6 +19,11 @@ namespace sql {
 		return ::mysql_affected_rows(dri.pmysql);
 	}
 
+	int Connect::ping()
+	{
+		return ::mysql_ping(dri.pmysql);
+	}
+
 	Connect::Connect(
 		Drive& d,
 		const char *host,

@@ -32,6 +32,8 @@ namespace sql {
 			return query(str);
 		}
 
+		int ping();
+
 	private:
 
 		template<typename F,typename ...Args>
